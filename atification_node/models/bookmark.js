@@ -17,7 +17,7 @@ class Bookmark extends Sequelize.Model {
         }, {
             sequelize,
             timestamps: false,
-            underscored: false,
+            underscored: true,
             modelName: 'Bookmark',
             tableName: 'bookmarks',
             paranoid: false,

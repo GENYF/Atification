@@ -22,7 +22,7 @@ class Keyword extends Sequelize.Model {
         }, {
             sequelize,
             timestamps: false,
-            underscored: false,
+            underscored: true,
             modelName: 'Keyword',
             tableName: 'keywords',
             paranoid: false,

@@ -1,23 +1,28 @@
 const Sequelize = require('sequelize');
 
-class Department extends Sequelize.Model {
+class FixedNotice extends Sequelize.Model {
     // 테이블 정의
     static initiate(sequelize) {
-        Department.init({
-            name: {
+        FixedNotice.init({
+            category: {
                 type: Sequelize.STRING,
                 allowNull: false,
-                unique: true,
+                unique: false,
             },
-            phone: {
+            title: {
                 type: Sequelize.STRING,
                 allowNull: false,
-                unique: true,
+                unique: false,
             },
-            location: {
+            date: {
+                type: Sequelize.DATE,
+                allowNull: false,
+                unique: false,
+            },
+            writer: {
                 type: Sequelize.STRING,
                 allowNull: false,
-                unique: true,
+                unique: false,
             },
             link: {
                 type: Sequelize.STRING,
@@ -28,8 +33,8 @@ class Department extends Sequelize.Model {
             sequelize,
             timestamps: false,
             underscored: true,
-            modelName: 'Department',
-            tableName: 'departments',
+            modelName: 'FixedNotice',
+            tableName: 'fixed_notices',
             paranoid: false,
             charset: 'utf8',
             collate: 'utf8_general_ci',
@@ -41,4 +46,4 @@ class Department extends Sequelize.Model {
     }
 }
 
-module.exports = Department;
+module.exports = FixedNotice;

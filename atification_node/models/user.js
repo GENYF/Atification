@@ -20,10 +20,21 @@ class User extends Sequelize.Model {
                 allowNull: false,
                 unique: true,
             },
+            createdAt: {
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.NOW,
+                name: 'createdAt',
+                field: 'created_at'
+            },
+            updatedAt: {
+                type: Sequelize.DATE,
+                name: 'updatedAt',
+                field: 'updated_at'
+            },
         }, {
             sequelize,
             timestamps: true,
-            underscored: false,
+            underscored: true,
             modelName: 'User',
             tableName: 'users',
             paranoid: false,
