@@ -17,40 +17,35 @@ class NoticeCrawler {
             const html = await axios.get(this.url, { headers: this.headers });
             const $ = cheerio.load(html.data);
 
+            const bodyList = $("tbody > tr");
+            const pattern = /[\t\r\n\v\f]{3,}|\s{3,}/g;
+
             let fixedNoticeIndex = 0;
             let noticeIndex = 0;
 
-            const bodyList = $("tbody > tr");
-
             bodyList.map((index, element) => {
-                let cellList = $(element).find("td").text().replace(/[\t\r\n\v\f]+/g, "|").split("|");
-                let cellLink = $(element).find("td").find("a").attr("href");
+                let cellId =  $(element).find(".b-num-box").text().replace(pattern, "");
+                let cellCategory = $(element).find(".b-cate").text().replace(pattern, "");
+                let cellWriter = $(element).find(".b-writer").text().replace(pattern, "");
+                let cellDate = "20" + $(element).find(".b-date").text().replace(pattern, "");
+                let cellTitle = $(element).find(".b-title-box").find("a").text().replace(pattern, "");
+                let cellLink = $(element).find(".b-title-box").find("a").attr("href").toString();
 
-                if (cellList[1] === "공지") {
+                if (cellId === "공지") {
                     this.fixedNoticeList[fixedNoticeIndex++] = {
-                        number: cellList[1],
-                        category: cellList[2],
-                        title: cellList[6],
-                        writer: cellList[16],
-                        date: '20' + cellList[17],
-                        link: `https://www.ajou.ac.kr/kr/ajou/notice.do${cellLink}`
-                    };
-                } else if (cellList[5] === "NEW") {
-                    this.noticeList[noticeIndex++] = {
-                        number: cellList[1],
-                        category: cellList[2],
-                        title: cellList[3],
-                        writer: cellList[9],
-                        date: '20' + cellList[10],
+                        category: cellCategory,
+                        writer: cellWriter,
+                        date: cellDate,
+                        title: cellTitle,
                         link: `https://www.ajou.ac.kr/kr/ajou/notice.do${cellLink}`
                     };
                 } else {
                     this.noticeList[noticeIndex++] = {
-                        number: cellList[1],
-                        category: cellList[2],
-                        title: cellList[3],
-                        writer: cellList[8],
-                        date: '20' + cellList[9],
+                        id: cellId,
+                        category: cellCategory,
+                        writer: cellWriter,
+                        date: cellDate,
+                        title: cellTitle,
                         link: `https://www.ajou.ac.kr/kr/ajou/notice.do${cellLink}`
                     };
                 }
@@ -77,10 +72,10 @@ class NoticeCrawler {
             this.noticeList.forEach((element) => {
                 Notice.findOrCreate({
                     where : {
-                        id: element.number,
+                        id: element.id,
                     },
                     defaults: {
-                        id: element.number,
+                        id: element.id,
                         category: element.category,
                         title: element.title,
                         date: Date.parse(element.date),
